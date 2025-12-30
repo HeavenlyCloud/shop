@@ -95,3 +95,84 @@ td {
     border-top: 2px solid #ddd;
   }
 }
+
+/* Better tap targets everywhere */
+input, select, button {
+  min-height: 44px;         /* comfy on mobile */
+  border-radius: 10px;
+}
+
+/* Make the table scroll if needed (desktop keeps table) */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: convert table rows into stacked cards */
+@media (max-width: 600px) {
+  .app { padding: 14px; }
+
+  .controls,
+  .input-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  th, thead { display: none; }
+
+  table {
+    display: block;
+    overflow: visible;
+  }
+
+  tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  tr {
+    border: 1px solid #e6e6e6;
+    border-radius: 14px;
+    padding: 10px;
+    margin: 10px 0;
+    background: #fff;
+  }
+
+  td {
+    border: 0;
+    padding: 8px 0;
+    text-align: left;
+  }
+
+  /* Labels per “column” */
+  td:nth-child(1)::before { content: "Item: "; font-weight: 600; }
+  td:nth-child(2)::before { content: "Qty: "; font-weight: 600; }
+  td:nth-child(3)::before { content: "Price: "; font-weight: 600; }
+  td:nth-child(4)::before { content: "Total: "; font-weight: 600; }
+  td:nth-child(5)::before { content: ""; }
+
+  /* Make inline inputs fit */
+  td input {
+    width: 120px;
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  /* Delete button full-width for easy tap */
+  td button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  /* Sticky total bar stays visible */
+  .summary {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #eee;
+    padding: 12px 0 0;
+  }
+}

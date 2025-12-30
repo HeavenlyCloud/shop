@@ -11,7 +11,7 @@ let currency = localStorage.getItem("currency") || "₱";
 currencySelect.value = currency;
 
 function addItem() {
-  const name = nameInput.value;
+  const name = nameInput.value.trim();
   const qty = Number(qtyInput.value);
   const price = Number(priceInput.value);
 
