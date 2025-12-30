@@ -23,7 +23,8 @@ h1 {
   margin-bottom: 10px;
 }
 
-input, select {
+input,
+select {
   flex: 1;
   padding: 8px;
 }
@@ -39,7 +40,8 @@ table {
   margin-top: 10px;
 }
 
-th, td {
+th,
+td {
   padding: 8px;
   border-bottom: 1px solid #ddd;
   text-align: center;
@@ -65,4 +67,31 @@ th, td {
 .over-budget {
   color: red;
   font-weight: bold;
+}
+
+@media (max-width: 600px) {
+
+  .controls,
+  .input-row {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  input,
+  select {
+    font-size: 16px;
+    /* prevents mobile zoom */
+  }
+
+  .summary {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 2px solid #ddd;
+  }
 }

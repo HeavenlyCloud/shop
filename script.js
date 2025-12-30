@@ -3,8 +3,11 @@ const totalEl = document.getElementById("grandTotal");
 const currencySelect = document.getElementById("currency");
 const budgetInput = document.getElementById("budget");
 
-let currency = localStorage.getItem("currency") || "₱";
+const nameInput = document.getElementById("name");
+const qtyInput = document.getElementById("qty");
+const priceInput = document.getElementById("price");
 
+let currency = localStorage.getItem("currency") || "₱";
 currencySelect.value = currency;
 
 function addItem() {
@@ -28,6 +31,7 @@ function addItem() {
   saveData();
 
   nameInput.value = qtyInput.value = priceInput.value = "";
+  nameInput.focus();
 }
 
 function recalc(input) {
@@ -92,7 +96,8 @@ function loadData() {
 
 window.onload = loadData;
 
-// Enter key support
 document.addEventListener("keydown", e => {
-  if (e.key === "Enter") addItem();
+  if (e.key === "Enter" && nameInput.value.trim()) {
+    addItem();
+  }
 });
