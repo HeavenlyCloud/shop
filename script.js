@@ -1,35 +1,45 @@
 const list = document.getElementById("list");
-const grandTotalEl = document.getElementById("grandTotal");
+const totalEl = document.getElementById("grandTotal");
+const currencySelect = document.getElementById("currency");
+const budgetInput = document.getElementById("budget");
+
+let currency = localStorage.getItem("currency") || "₱";
+
+currencySelect.value = currency;
 
 function addItem() {
-  const name = document.getElementById("name").value;
-  const qty = Number(document.getElementById("qty").value);
-  const price = Number(document.getElementById("price").value);
+  const name = nameInput.value;
+  const qty = Number(qtyInput.value);
+  const price = Number(priceInput.value);
 
-  if (!name || qty <= 0 || price < 0) {
-    alert("Please enter valid values");
-    return;
-  }
+  if (!name || qty <= 0 || price < 0) return alert("Invalid input");
 
-  const total = qty * price;
-
+  const row = document.createElement("tr");
   row.innerHTML = `
-  <td>${name}</td>
-  <td><input type="number" value="${qty}" min="1" onchange="recalc(this)"></td>
-  <td><input type="number" value="${price}" min="0" step="0.01" onchange="recalc(this)"></td>
-  <td class="item-total">₱${total.toFixed(2)}</td>
-  <td><button onclick="removeItem(this)">❌</button></td>
-`;
-
+    <td>${name}</td>
+    <td><input type="number" value="${qty}" min="1" onchange="recalc(this)"></td>
+    <td><input type="number" value="${price}" min="0" step="0.01" onchange="recalc(this)"></td>
+    <td class="item-total"></td>
+    <td><button onclick="removeItem(this)">❌</button></td>
+  `;
 
   list.appendChild(row);
+  recalc(row.querySelector("input"));
+  saveData();
+
+  nameInput.value = qtyInput.value = priceInput.value = "";
+}
+
+function recalc(input) {
+  const row = input.closest("tr");
+  const qty = Number(row.children[1].querySelector("input").value);
+  const price = Number(row.children[2].querySelector("input").value);
+  const total = qty * price;
+
+  row.querySelector(".item-total").textContent =
+    currency + total.toFixed(2);
+
   updateGrandTotal();
-
-  // Clear inputs
-  document.getElementById("name").value = "";
-  document.getElementById("qty").value = "";
-  document.getElementById("price").value = "";
-
   saveData();
 }
 
@@ -37,51 +47,52 @@ function removeItem(btn) {
   if (!confirm("Remove this item?")) return;
   btn.closest("tr").remove();
   updateGrandTotal();
-
   saveData();
-}
-
-
-function updateGrandTotal() {
-  let sum = 0;
-  document.querySelectorAll(".item-total").forEach(td => {
-    sum += Number(td.textContent.replace("₱", ""));
-  });
-  grandTotalEl.textContent = sum.toFixed(2);
 }
 
 function resetList() {
   if (!confirm("Clear all items?")) return;
   list.innerHTML = "";
   updateGrandTotal();
-}
-
-function recalc(input) {
-  const row = input.closest("tr");
-  const qty = Number(row.children[1].querySelector("input").value);
-  const price = Number(row.children[2].querySelector("input").value);
-  const totalCell = row.querySelector(".item-total");
-
-  const total = qty * price;
-  totalCell.textContent = "₱" + total.toFixed(2);
-
-  updateGrandTotal();
   saveData();
 }
 
+function updateCurrency() {
+  currency = currencySelect.value;
+  localStorage.setItem("currency", currency);
+  updateGrandTotal();
+}
+
+function updateGrandTotal() {
+  let sum = 0;
+  document.querySelectorAll(".item-total").forEach(td => {
+    sum += Number(td.textContent.replace(currency, ""));
+  });
+
+  if (document.getElementById("taxToggle").checked) {
+    sum *= 1.12;
+  }
+
+  totalEl.textContent = `Total: ${currency}${sum.toFixed(2)}`;
+
+  const budget = Number(budgetInput.value);
+  totalEl.classList.toggle("over-budget", budget && sum > budget);
+}
+
 function saveData() {
-  localStorage.setItem("shoppingList", list.innerHTML);
+  localStorage.setItem("shoppingData", list.innerHTML);
+  localStorage.setItem("budget", budgetInput.value);
 }
 
 function loadData() {
-  const saved = localStorage.getItem("shoppingList");
-  if (saved) {
-    list.innerHTML = saved;
-    updateGrandTotal();
-  }
+  list.innerHTML = localStorage.getItem("shoppingData") || "";
+  budgetInput.value = localStorage.getItem("budget") || "";
+  updateGrandTotal();
 }
 
+window.onload = loadData;
+
+// Enter key support
 document.addEventListener("keydown", e => {
   if (e.key === "Enter") addItem();
 });
-
