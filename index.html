@@ -12,8 +12,8 @@
 
   <div class="controls">
     <select id="currency" onchange="updateCurrency()">
+      <option value="$">$ NTD</option>
       <option value="₱">₱ PHP</option>
-      <option value="$">$ USD</option>
       <option value="¥">¥ JPY</option>
     </select>
 
@@ -45,7 +45,7 @@
       <input type="checkbox" id="taxToggle" onchange="updateGrandTotal()"> Add 12% Tax
     </label>
 
-    <h2 id="grandTotal">Total: ₱0.00</h2>
+    <h2 id="grandTotal">Total: $0.00</h2>
   </div>
 
   <button class="danger" onclick="resetList()">🗑 Clear All</button>
